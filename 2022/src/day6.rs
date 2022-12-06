@@ -11,10 +11,13 @@ pub fn part2(input: &str) -> usize {
 }
 
 fn solve(input: &str, message_size: usize) -> usize {
-    input.as_bytes().windows(message_size).enumerate()
-    .filter(|(_, window)| window.into_iter().unique().count() == message_size)
-    .map(|(i, _)| i + message_size)
-    .next().unwrap()
+    input
+        .as_bytes()
+        .windows(message_size)
+        .find_position(|window| window.into_iter().all_unique())
+        .unwrap()
+        .0
+        + message_size
 }
 
 #[cfg(test)]
@@ -30,7 +33,7 @@ mod tests {
     ];
 
     #[test]
-    fn sample1() {    
+    fn sample1() {
         for (input, result, _) in EXAMPLES {
             assert_eq!(part1(input), result);
         }

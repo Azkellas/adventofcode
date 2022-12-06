@@ -23,7 +23,7 @@ pub fn part2(input: &str) -> usize {
 
 #[cfg(test)]
 mod tests {
-    use super::*; 
+    use super::*;
 
     static EXAMPLE: &str = "\
 2-4,6-8

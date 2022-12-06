@@ -8,11 +8,10 @@ pub fn input_generator(input: &str) -> (Vec<Vec<char>>, Vec<(usize, usize, usize
     for line in input.lines() {
         if line.trim() == "" {
             found_blank = true;
-        }
-        else {
+        } else {
             match found_blank {
                 true => moves.push(line),
-                false => preset.push(line)
+                false => preset.push(line),
             }
         }
     }
@@ -21,7 +20,11 @@ pub fn input_generator(input: &str) -> (Vec<Vec<char>>, Vec<(usize, usize, usize
     let mut columns = vec![];
     columns.push(vec![]); // index 0
     preset.reverse();
-    let stack_count = preset[0].split(" ").filter_map(|s| s.parse::<i32>().ok()).max().unwrap();
+    let stack_count = preset[0]
+        .split(" ")
+        .filter_map(|s| s.parse::<i32>().ok())
+        .max()
+        .unwrap();
 
     for idx in 1..=stack_count {
         let mut column = vec![];
@@ -37,7 +40,10 @@ pub fn input_generator(input: &str) -> (Vec<Vec<char>>, Vec<(usize, usize, usize
     }
 
     // parse moves
-    let moves = moves.iter().map(|line| scan_fmt!(line, "move {d} from {d} to {d}", usize, usize, usize).unwrap()).collect_vec();
+    let moves = moves
+        .iter()
+        .map(|line| scan_fmt!(line, "move {d} from {d} to {d}", usize, usize, usize).unwrap())
+        .collect_vec();
     (columns, moves)
 }
 
