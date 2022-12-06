@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use itertools::Itertools;
 
 #[aoc(day6, part1)]
 pub fn part1(input: &str) -> usize {
@@ -11,13 +11,10 @@ pub fn part2(input: &str) -> usize {
 }
 
 fn solve(input: &str, message_size: usize) -> usize {
-    for i in 0..input.len() {
-        let set: HashSet<&u8> = HashSet::from_iter(input.as_bytes()[i..i+message_size].iter());
-        if set.len() == message_size {
-            return i + message_size;
-        }
-    }
-    unreachable!();
+    input.as_bytes().windows(message_size).enumerate()
+    .filter(|(_, window)| window.into_iter().unique().count() == message_size)
+    .map(|(i, _)| i + message_size)
+    .next().unwrap()
 }
 
 #[cfg(test)]
