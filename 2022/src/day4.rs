@@ -8,7 +8,7 @@ pub fn input_generator<'a>(input: &'a str) -> impl Iterator<Item = (i32, i32, i3
 }
 
 #[aoc(day4, part1)]
-pub fn part1<'a>(input: &str) -> usize {
+pub fn part1(input: &str) -> usize {
     input_generator(input)
         .filter(|(a1, a2, b1, b2)| a1 <= b1 && a2 >= b2 || b1 <= a1 && b2 >= a2)
         .count()
@@ -23,7 +23,7 @@ pub fn part2(input: &str) -> usize {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use super::*; 
 
     static EXAMPLE: &str = "\
 2-4,6-8
