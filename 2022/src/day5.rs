@@ -1,7 +1,8 @@
 use itertools::Itertools;
 use scan_fmt::*;
 
-pub fn input_generator(input: &str) -> (Vec<Vec<char>>, Vec<(usize, usize, usize)>) {
+pub struct Move(usize, usize, usize);
+pub fn input_generator(input: &str) -> (Vec<Vec<char>>, Vec<Move>) {
     let mut preset: Vec<&str> = vec![];
     let mut moves: Vec<&str> = vec![];
     let mut found_blank = false;
@@ -21,7 +22,7 @@ pub fn input_generator(input: &str) -> (Vec<Vec<char>>, Vec<(usize, usize, usize
     columns.push(vec![]); // index 0
     preset.reverse();
     let stack_count = preset[0]
-        .split(" ")
+        .split_whitespace()
         .filter_map(|s| s.parse::<i32>().ok())
         .max()
         .unwrap();
@@ -42,16 +43,20 @@ pub fn input_generator(input: &str) -> (Vec<Vec<char>>, Vec<(usize, usize, usize
     // parse moves
     let moves = moves
         .iter()
-        .map(|line| scan_fmt!(line, "move {d} from {d} to {d}", usize, usize, usize).unwrap())
+        .map(|line| {
+            scan_fmt!(line, "move {d} from {d} to {d}", usize, usize, usize)
+                .map(|(a, b, c)| Move(a, b, c))
+                .unwrap()
+        })
         .collect_vec();
     (columns, moves)
 }
 
 #[aoc(day5, part1)]
-pub fn part1<'a>(input: &str) -> String {
+pub fn part1(input: &str) -> String {
     let (mut columns, moves) = input_generator(input);
 
-    for (count, from, to) in moves {
+    for Move(count, from, to) in moves {
         for _ in 0..count {
             let c = columns[from].pop().unwrap();
             columns[to].push(c);
@@ -69,7 +74,7 @@ pub fn part1<'a>(input: &str) -> String {
 pub fn part2(input: &str) -> String {
     let (mut columns, moves) = input_generator(input);
 
-    for (count, from, to) in moves {
+    for Move(count, from, to) in moves {
         let mut temp = vec![];
         for _ in 0..count {
             let c = columns[from].pop().unwrap();
@@ -93,8 +98,7 @@ pub fn part2(input: &str) -> String {
 mod tests {
     use super::*;
 
-    static EXAMPLE: &str =
-"    [D]    
+    static EXAMPLE: &str = "    [D]    
 [N] [C]    
 [Z] [M] [P]
  1   2   3 

@@ -13,9 +13,9 @@ pub fn input_generator(input: &str) -> Vec<(i32, i32)> {
 }
 
 #[aoc(day2, part1)]
-pub fn part1(input: &Vec<(i32, i32)>) -> i32 {
+pub fn part1(input: &[(i32, i32)]) -> i32 {
     input
-        .into_iter()
+        .iter()
         .map(|(opp_play, my_play)| {
             // hand score + result score
             (my_play + 1) + (3 * ((my_play - opp_play + 4) % 3))
@@ -24,9 +24,9 @@ pub fn part1(input: &Vec<(i32, i32)>) -> i32 {
 }
 
 #[aoc(day2, part2)]
-pub fn part2(input: &Vec<(i32, i32)>) -> i32 {
+pub fn part2(input: &[(i32, i32)]) -> i32 {
     input
-        .into_iter()
+        .iter()
         .map(|(opp_play, result)| {
             let my_play = (opp_play + result + 2) % 3;
             // hand score + result score

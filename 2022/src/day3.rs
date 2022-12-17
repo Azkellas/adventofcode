@@ -8,8 +8,8 @@ pub fn part1(input: &str) -> i32 {
         .into_iter()
         .map(|line| {
             let (left, right) = line.trim().split_at(line.len() / 2);
-            let left: HashSet<char> = HashSet::from_iter(left.chars().into_iter());
-            let right: HashSet<char> = HashSet::from_iter(right.chars().into_iter());
+            let left: HashSet<char> = HashSet::from_iter(left.chars());
+            let right: HashSet<char> = HashSet::from_iter(right.chars());
             let c = HashSet::intersection(&left, &right).next().unwrap();
             match c.is_ascii_lowercase() {
                 true => (*c as u8 - b'a' + 1) as i32,
@@ -24,13 +24,12 @@ pub fn part2(input: &str) -> i32 {
     input
         .lines()
         .into_iter()
-        .map(|l| HashSet::from_iter(l.chars().into_iter()))
+        .map(|l| HashSet::from_iter(l.chars()))
         .tuples()
         .map(
             |(l1, l2, l3): (HashSet<char>, HashSet<char>, HashSet<char>)| {
                 let c = HashSet::intersection(&l1, &l2)
-                    .filter(|c| l3.contains(c))
-                    .next()
+                    .find(|c| l3.contains(c))
                     .unwrap();
                 match c.is_ascii_lowercase() {
                     true => (*c as u8 - b'a' + 1) as i32,

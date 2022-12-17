@@ -1,6 +1,6 @@
 use scan_fmt::*;
 
-pub fn input_generator<'a>(input: &'a str) -> impl Iterator<Item = (i32, i32, i32, i32)> + 'a {
+pub fn input_generator(input: &str) -> impl Iterator<Item = (i32, i32, i32, i32)> + '_ {
     input
         .lines()
         .into_iter()

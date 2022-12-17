@@ -14,7 +14,7 @@ fn solve(input: &str, message_size: usize) -> usize {
     input
         .as_bytes()
         .windows(message_size)
-        .find_position(|window| window.into_iter().all_unique())
+        .find_position(|window| window.iter().all_unique())
         .unwrap()
         .0
         + message_size

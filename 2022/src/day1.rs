@@ -9,12 +9,12 @@ pub fn input_generator(input: &str) -> Vec<i32> {
 }
 
 #[aoc(day1, part1)]
-pub fn part1(elves: &Vec<i32>) -> i32 {
+pub fn part1(elves: &[i32]) -> i32 {
     *elves.iter().max().unwrap()
 }
 
 #[aoc(day1, part2)]
-pub fn part2(elves: &Vec<i32>) -> i32 {
+pub fn part2(elves: &[i32]) -> i32 {
     elves.iter().sorted().rev().take(3).sum()
 }
 
