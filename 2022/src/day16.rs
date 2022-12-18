@@ -1,6 +1,6 @@
 use itertools::Itertools;
 use scan_fmt::*;
-use std::collections::HashMap;
+use std::collections::{HashMap, BTreeSet};
 
 #[derive(Debug)]
 struct Valve {
@@ -184,9 +184,9 @@ pub fn part1(input: &str) -> usize {
     backtrace(&valves, turns_left, start_id, &mut data)
 }
 
-fn powerset<T>(s: &[T]) -> Vec<Vec<T>>
+fn powerset<T>(s: &[T]) -> Vec<BTreeSet<T>>
 where
-    T: Clone,
+    T: Clone + PartialEq + Eq + PartialOrd + Ord,
 {
     (0..2usize.pow(s.len() as u32))
         .map(|i| {
@@ -241,15 +241,8 @@ pub fn part2(input: &str) -> usize {
 
     let mut max = 0;
     for (i, set1) in sets.iter().enumerate() {
-        for (j, set2) in sets.iter().enumerate() {
-            let mut valid = true;
-            for s in set1 {
-                if set2.contains(s) {
-                    valid = false;
-                    break;
-                }
-            }
-            if valid && scores[i] + scores[j] > max {
+        for (j, set2) in sets.iter().skip(i+1).enumerate() {
+            if set1.is_disjoint(set2) && scores[i] + scores[j] > max {
                 max = scores[i] + scores[j];
             }
         }

@@ -57,17 +57,16 @@ pub fn part1(input: &str) -> String {
     let (mut columns, moves) = input_generator(input);
 
     for Move(count, from, to) in moves {
-        for _ in 0..count {
-            let c = columns[from].pop().unwrap();
-            columns[to].push(c);
-        }
+        let start_idx = columns[from].len() - count;
+        let temp: Vec<char> = columns[from].drain(start_idx..).collect();
+        columns[to].extend(temp.iter().rev());
     }
 
-    let mut res = "".to_owned();
-    for col in columns.iter_mut().skip(1) {
-        res.push(col.pop().unwrap());
-    }
-    res
+    columns
+        .iter()
+        .skip(1)
+        .map(|col| col.last().unwrap())
+        .collect()
 }
 
 #[aoc(day5, part2)]
@@ -75,23 +74,16 @@ pub fn part2(input: &str) -> String {
     let (mut columns, moves) = input_generator(input);
 
     for Move(count, from, to) in moves {
-        let mut temp = vec![];
-        for _ in 0..count {
-            let c = columns[from].pop().unwrap();
-            temp.push(c);
-        }
-        for _ in 0..count {
-            columns[to].push(temp.pop().unwrap());
-        }
-
-        // eprintln!("{:?}", &columns);
+        let start_idx = columns[from].len() - count;
+        let temp: Vec<char> = columns[from].drain(start_idx..).collect();
+        columns[to].extend(temp);
     }
 
-    let mut res = "".to_owned();
-    for col in columns.iter_mut().skip(1) {
-        res.push(col.pop().unwrap());
-    }
-    res
+    columns
+        .iter()
+        .skip(1)
+        .map(|col| col.last().unwrap())
+        .collect()
 }
 
 #[cfg(test)]

@@ -288,24 +288,22 @@ fn input_generator(input: &str) -> Rc<Item> {
     root
 }
 
-#[aoc(day7, part1)]
-pub fn part1(input: &str) -> usize {
-    get_part1_score(Rc::downgrade(&input_generator(input)), 100000)
+fn get_all_folders(folder: Weak<Item>) -> Box<dyn Iterator<Item = Weak<Item>>> {
+    let children = folder.upgrade().unwrap().get_folders();
+    Box::new(
+        std::iter::once(folder).chain(children.into_iter().map(|f| get_all_folders(f)).flatten()),
+    )
 }
 
-fn get_part1_score(folder: Weak<Item>, max_size: usize) -> usize {
-    let mut res = 0;
-    let folder = folder.upgrade().unwrap();
-    let size = folder.get_size();
-    if size < max_size {
-        res += size;
-    }
+#[aoc(day7, part1)]
+pub fn part1(input: &str) -> usize {
+    let max_size = 100_000;
+    let root = input_generator(input);
 
-    for child in folder.get_folders() {
-        res += get_part1_score(child, max_size);
-    }
-
-    res
+    get_all_folders(Rc::downgrade(&root))
+        .map(|f| f.upgrade().unwrap().get_size())
+        .filter(|s| *s < max_size)
+        .sum()
 }
 
 #[aoc(day7, part2)]
@@ -313,26 +311,12 @@ pub fn part2(input: &str) -> usize {
     let root = input_generator(input);
     let free_space = 70_000_000 - root.get_size();
     let space_needed = 30_000_000 - free_space;
-    get_part2_score(Rc::downgrade(&root), space_needed)
-}
 
-fn get_part2_score(folder: Weak<Item>, space_needed: usize) -> usize {
-    let mut res = 70_000_000;
-    let folder = folder.upgrade().unwrap();
-    let size = folder.get_size();
-
-    if size > space_needed {
-        res = size;
-    }
-
-    for child in folder.get_folders() {
-        let size = get_part2_score(child, space_needed);
-        if size >= space_needed && size < res {
-            res = size;
-        }
-    }
-
-    res
+    get_all_folders(Rc::downgrade(&root))
+        .map(|f| f.upgrade().unwrap().get_size())
+        .filter(|s| *s > space_needed)
+        .min()
+        .unwrap()
 }
 
 #[cfg(test)]

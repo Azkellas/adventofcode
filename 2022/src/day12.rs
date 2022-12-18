@@ -1,41 +1,55 @@
 use std::collections::VecDeque;
 
+use itertools::iproduct;
+
 pub fn input_generator(input: &str) -> Vec<Vec<char>> {
     input
         .lines()
         .into_iter()
-        .map(|line| {
-            line.chars().collect()
-        })
+        .map(|line| line.chars().collect())
         .collect()
 }
 
-pub fn find_steps(grid: &Vec<Vec<char>>, start: (usize, usize), end: (usize, usize)) -> usize {
+fn is_good_move(
+    grid: &Vec<Vec<char>>,
+    dists: &Vec<Vec<usize>>,
+    (x, y): (usize, usize),
+    (nx, ny): (usize, usize),
+) -> bool {
+    let (width, height) = (grid[0].len(), grid.len());
+    let is_in_bound = nx < width && ny < height;
+    let is_new = is_in_bound && dists[y][x] + 1 < dists[ny][nx];
+    let is_accessible = is_in_bound && grid[ny][nx] as u8 <= grid[y][x] as u8 + 1;
+    is_in_bound && is_new && is_accessible
+}
+
+pub fn find_steps(grid: &Vec<Vec<char>>, starts: &[(usize, usize)], end: (usize, usize)) -> usize {
     let (width, height) = (grid[0].len(), grid.len());
     let mut dists: Vec<Vec<usize>> = vec![vec![usize::MAX - 10; width]; height];
 
     let mut queue: VecDeque<(usize, usize)> = VecDeque::new();
 
-    queue.push_back(start);
-    dists[start.1][start.0] = 0;
+    for start in starts {
+        queue.push_back(*start);
+        dists[start.1][start.0] = 0;
+    }
+
+    let deltas: [(isize, isize); 4] = [(-1, 0), (1, 0), (0, -1), (0, 1)];
 
     while let Some((x, y)) = queue.pop_front() {
-        if x > 0 && dists[y][x] + 1 < dists[y][x-1] && grid[y][x-1] as i32 - grid[y][x] as i32 <= 1 {
-            dists[y][x-1] = dists[y][x] + 1;
-            queue.push_back((x-1, y));
-        }
-        if x < width - 1 && dists[y][x] + 1 < dists[y][x+1] && grid[y][x+1] as i32 - grid[y][x] as i32 <= 1 {
-            dists[y][x+1] = dists[y][x] + 1;
-            queue.push_back((x+1, y));
-        }
-        if y > 0 && dists[y][x] + 1 < dists[y-1][x] && grid[y-1][x] as i32 - grid[y][x] as i32 <= 1 {
-            dists[y-1][x] = dists[y][x] + 1;
-            queue.push_back((x, y-1));
-        }
-        if y < height - 1 && dists[y][x] + 1 < dists[y+1][x] && grid[y+1][x] as i32 - grid[y][x] as i32 <= 1 {
-            dists[y+1][x] = dists[y][x] + 1;
-            queue.push_back((x, y+1));
-        }
+        deltas
+            .iter()
+            .filter_map(|&(dx, dy)| {
+                let nx = x.checked_add_signed(dx)?;
+                let ny = y.checked_add_signed(dy)?;
+                Some((nx, ny))
+            })
+            .for_each(|(nx, ny)| {
+                if is_good_move(grid, &dists, (x, y), (nx, ny)) {
+                    dists[ny][nx] = dists[y][x] + 1;
+                    queue.push_back((nx, ny));
+                }
+            });
     }
 
     dists[end.1][end.0]
@@ -48,20 +62,19 @@ pub fn part1(input: &str) -> usize {
     let mut start = (usize::MAX, usize::MAX);
     let (width, height) = (grid[0].len(), grid.len());
 
-    for x in 0..width {
-        for y in 0..height {
-            if grid[y][x] == 'S' {
-                start = (x, y);
-                grid[y][x] = 'a';
-            }
-            if grid[y][x] == 'E' {
-                target = (x, y);
-                grid[y][x] = 'z';
-            }
+    iproduct!(0..width, 0..height).for_each(|(x, y)| match grid[y][x] {
+        'S' => {
+            grid[y][x] = 'a';
+            start = (x, y);
         }
-    }
+        'E' => {
+            target = (x, y);
+            grid[y][x] = 'z';
+        }
+        _ => (),
+    });
 
-    find_steps(&grid, start, target)
+    find_steps(&grid, &[start], target)
 }
 
 #[aoc(day12, part2)]
@@ -69,28 +82,21 @@ pub fn part2(input: &str) -> usize {
     let mut grid = input_generator(input);
     let (width, height) = (grid[0].len(), grid.len());
     let mut target = (usize::MAX, usize::MAX);
+    let mut starts = vec![];
 
-    for x in 0..width {
-        for y in 0..height {
-            if grid[y][x] == 'S' {
-                grid[y][x] = 'a';
-            }
-            if grid[y][x] == 'E' {
-                target = (x, y);
-                grid[y][x] = 'z';
-            }
+    iproduct!(0..width, 0..height).for_each(|(x, y)| match grid[y][x] {
+        'S' | 'a' => {
+            grid[y][x] = 'a';
+            starts.push((x, y));
         }
-    }
+        'E' => {
+            target = (x, y);
+            grid[y][x] = 'z';
+        }
+        _ => (),
+    });
 
-    let mut min = usize::MAX;
-    for x in 0..width {
-        for y in 0..height {
-            if grid[y][x] == 'a' {
-                min = usize::min(min, find_steps(&grid, (x, y), target));
-            }
-        }
-    }
-    min
+    find_steps(&grid, &starts, target)
 }
 
 #[cfg(test)]
@@ -102,7 +108,7 @@ Sabqponm
 abcryxxl
 accszExk
 acctuvwj
-abdefghi";    
+abdefghi";
 
     #[test]
     fn sample1() {

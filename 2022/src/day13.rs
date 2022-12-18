@@ -1,7 +1,7 @@
-use std::cmp::Ordering;
-use std::str::FromStr;
-use std::num::ParseIntError;
 use itertools::Itertools;
+use std::cmp::Ordering;
+use std::num::ParseIntError;
+use std::str::FromStr;
 
 #[derive(Debug, Clone)]
 pub enum List {
@@ -20,18 +20,13 @@ impl Ord for List {
             (lhs, Self::Int(rhs)) => {
                 let rhs = Self::List(vec![Self::Int(*rhs)]);
                 lhs.cmp(&rhs)
-            },
-            (Self::List(lhs), Self::List(rhs)) => {
-                let (lhs_len, rhs_len) = (lhs.len(), rhs.len());
-                let min = usize::min(lhs_len, rhs_len);
-                for i in 0..min {
-                    match lhs[i].cmp(&rhs[i]) {
-                        Ordering::Equal => continue,
-                        ord => return ord,
-                    }
-                }
-                lhs_len.cmp(&rhs_len)
-            },
+            }
+            (Self::List(lhs), Self::List(rhs)) => lhs
+                .iter()
+                .zip(rhs.iter())
+                .map(|(l, r)| l.cmp(r))
+                .find(|&ord| ord != Ordering::Equal)
+                .unwrap_or_else(|| lhs.len().cmp(&rhs.len())),
         }
     }
 }
@@ -45,7 +40,7 @@ impl PartialEq for List {
         self.cmp(other) == Ordering::Equal
     }
 }
-impl Eq for List { }
+impl Eq for List {}
 
 impl FromStr for List {
     type Err = ParseIntError;
@@ -63,20 +58,19 @@ impl FromStr for List {
                 b'[' => depth += 1,
                 b']' => depth -= 1,
                 b',' if depth == 1 => split_idx.push(i),
-                _ => ()
+                _ => (),
             }
         }
 
         if split_idx.is_empty() {
             return if bytes[0] == b'[' {
                 // contains sublist
-                let rec = Self::from_str(&input[1..input.len()-1])?;
+                let rec = Self::from_str(&input[1..input.len() - 1])?;
                 Ok(Self::List(vec![rec]))
-            }
-            else {
+            } else {
                 // mere int
                 input.parse::<usize>().map(Self::Int)
-            }
+            };
         }
 
         // lists of lists
@@ -84,11 +78,12 @@ impl FromStr for List {
         split_idx.push(bytes.len() - 1);
 
         let mut lists = vec![];
-        for i in 0..split_idx.len() - 1 {
-            let (start, end) = (split_idx[i] + 1, split_idx[i+1]);
-            let rec = Self::from_str(&input[start..end])?;
-            lists.push(rec);
-        }
+        split_idx.iter().tuple_windows().try_for_each(
+            |(start, end)| -> Result<(), ParseIntError> {
+                let rec = Self::from_str(&input[*start + 1..*end])?;
+                Ok(lists.push(rec))
+            },
+        )?;
         Ok(Self::List(lists))
     }
 }
@@ -101,7 +96,6 @@ pub fn input_generator(input: &str) -> Result<Vec<List>, ParseIntError> {
         .map(List::from_str)
         .collect::<Result<Vec<_>, _>>()
 }
-
 
 #[must_use]
 #[aoc(day13, part1)]
@@ -127,7 +121,11 @@ pub fn part2(input: &str) -> usize {
     lists.push(key2.clone());
     lists.sort();
 
-    lists.iter().positions(|l| *l == key1 || *l == key2).map(|idx| idx + 1).product()
+    lists
+        .iter()
+        .positions(|l| *l == key1 || *l == key2)
+        .map(|idx| idx + 1)
+        .product()
 }
 
 #[cfg(test)]

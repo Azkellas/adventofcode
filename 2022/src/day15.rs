@@ -133,7 +133,6 @@ pub fn part2((pairs, test): &(Vec<Pair>, bool)) -> i64 {
                 .iter()
                 .any(|pair| distance(pair.sensor, pt) <= pair.dst as i32);
             if !seen {
-                dbg!(("topright", &pt));
                 return 4_000_000 * pt.0 as i64 + pt.1 as i64;
             }
             pt.0 += 1;
@@ -147,7 +146,6 @@ pub fn part2((pairs, test): &(Vec<Pair>, bool)) -> i64 {
                 .iter()
                 .any(|pair| distance(pair.sensor, pt) <= pair.dst as i32);
             if !seen {
-                dbg!(("topleft", &pt));
                 return 4_000_000 * pt.0 as i64 + pt.1 as i64;
             }
             pt.0 -= 1;
@@ -156,13 +154,11 @@ pub fn part2((pairs, test): &(Vec<Pair>, bool)) -> i64 {
 
         // bottom-right
         let mut pt = (sensor.0, sensor.1 + dst);
-        dbg!(&pt);
         while valid_point(pt, limit_size) && pt.0 <= sensor.0 + dst {
             let seen = pairs
                 .iter()
                 .any(|pair| distance(pair.sensor, pt) <= pair.dst as i32);
             if !seen {
-                dbg!(("botright", &pt));
                 return 4_000_000 * pt.0 as i64 + pt.1 as i64;
             }
             pt.0 += 1;
@@ -176,7 +172,6 @@ pub fn part2((pairs, test): &(Vec<Pair>, bool)) -> i64 {
                 .iter()
                 .any(|pair| distance(pair.sensor, pt) <= pair.dst as i32);
             if !seen {
-                dbg!(("botleft", &pt));
                 return 4_000_000 * pt.0 as i64 + pt.1 as i64;
             }
             pt.0 -= 1;

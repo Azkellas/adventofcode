@@ -1,4 +1,4 @@
-use itertools::Itertools;
+use itertools::{iproduct, Itertools};
 
 #[aoc(day8, part1)]
 pub fn part1(input: &str) -> usize {
@@ -10,45 +10,23 @@ pub fn part1(input: &str) -> usize {
                 .collect_vec()
         })
         .collect_vec();
-    let mut bools = vec![vec![false; grid[0].len()]; grid.len()];
 
-    for y in 0..grid.len() {
-        let mut max = 0;
-        for x in 0..grid[0].len() {
-            if grid[y][x] > max {
-                bools[y][x] = true;
-                max = grid[y][x];
-            }
-        }
-        let mut max = 0;
-        for x in (0..grid[0].len()).rev() {
-            if grid[y][x] > max {
-                bools[y][x] = true;
-                max = grid[y][x];
-            }
-        }
-    }
+    let deltas: [(isize, isize); 4] = [(-1, 0), (1, 0), (0, -1), (0, 1)];
 
-    for x in 0..grid[0].len() {
-        let mut max = 0;
-        for y in 0..grid.len() {
-            if grid[y][x] > max {
-                bools[y][x] = true;
-                max = grid[y][x];
-            }
-        }
-        let mut max = 0;
-        for y in (0..grid.len()).rev() {
-            if grid[y][x] > max {
-                bools[y][x] = true;
-                max = grid[y][x];
-            }
-        }
-    }
-    bools
-        .into_iter()
-        .flat_map(|v| v.into_iter())
-        .filter(|b| *b)
+    iproduct!(0..grid.len(), 0..grid[0].len())
+        .filter(|&(y, x)| {
+            let coord_height = grid[y][x];
+            deltas.iter().any(|&(dx, dy)| {
+                (1..)
+                    .into_iter()
+                    .map_while(|i| {
+                        let nx = x.checked_add_signed(dx * i)?;
+                        let ny = y.checked_add_signed(dy * i)?;
+                        grid.get(ny)?.get(nx)
+                    })
+                    .all(|&height| height < coord_height)
+            })
+        })
         .count()
 }
 
@@ -62,63 +40,34 @@ pub fn part2(input: &str) -> usize {
                 .collect_vec()
         })
         .collect_vec();
-    // let mut scores = vec![vec![0; grid[0].len()]; grid.len()];
-    let mut max_score = 0;
 
-    for x in 0..grid[0].len() {
-        // eprintln!("{} < {}", x, grid[0].len());
-        for y in 0..grid.len() {
-            let mut scores = (0, 0, 0, 0);
-            let tree_height = grid[y][x];
-            for dx in x + 1..grid[y].len() {
-                if grid[y][dx] >= tree_height {
-                    scores.0 = dx - x;
-                    break;
-                }
-            }
-            if scores.0 == 0 {
-                scores.0 = grid[y].len() - 1 - x;
-            }
+    let deltas: [(isize, isize); 4] = [(-1, 0), (1, 0), (0, -1), (0, 1)];
 
-            for dx in (0..x).rev() {
-                if grid[y][dx] >= tree_height {
-                    scores.1 = x - dx;
-                    break;
-                }
-            }
-            if scores.1 == 0 {
-                scores.1 = x;
-            }
+    iproduct!(0..grid.len(), 0..grid[0].len())
+        .map(|(y, x)| {
+            let coord_height = grid[y][x];
+            deltas
+                .iter()
+                .map(|&(dx, dy)| {
+                    let line = (1..).into_iter().map_while(|i| {
+                        let nx = x.checked_add_signed(dx * i)?;
+                        let ny = y.checked_add_signed(dy * i)?;
+                        grid.get(ny)?.get(nx)
+                    });
 
-            for dy in y + 1..grid.len() {
-                if grid[dy][x] >= tree_height {
-                    scores.2 = dy - y;
-                    break;
-                }
-            }
-            if scores.2 == 0 {
-                scores.2 = grid.len() - 1 - y;
-            }
-
-            for dy in (0..y).rev() {
-                if grid[dy][x] >= tree_height {
-                    scores.3 = y - dy;
-                    break;
-                }
-            }
-            if scores.3 == 0 {
-                scores.3 = y;
-            }
-
-            let score = scores.0 * scores.1 * scores.2 * scores.3;
-            // eprintln!("{x} {y} {}: {scores:?}", grid[y][x]);
-            if score > max_score {
-                max_score = score;
-            }
-        }
-    }
-
-    max_score
+                    let mut score = 0;
+                    for height in line {
+                        score += 1;
+                        if *height >= coord_height {
+                            break;
+                        }
+                    }
+                    score
+                })
+                .product::<usize>()
+        })
+        .max()
+        .unwrap()
 }
 
 #[cfg(test)]
