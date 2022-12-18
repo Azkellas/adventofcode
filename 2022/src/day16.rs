@@ -1,6 +1,6 @@
-use itertools::Itertools;
+use itertools::{iproduct, Itertools};
 use scan_fmt::*;
-use std::collections::{HashMap, BTreeSet};
+use std::collections::{BTreeSet, HashMap};
 
 #[derive(Debug)]
 struct Valve {
@@ -239,16 +239,11 @@ pub fn part2(input: &str) -> usize {
         assert_eq!(data.open.iter().filter(|b| !**b).count(), start_open);
     }
 
-    let mut max = 0;
-    for (i, set1) in sets.iter().enumerate() {
-        for (j, set2) in sets.iter().skip(i+1).enumerate() {
-            if set1.is_disjoint(set2) && scores[i] + scores[j] > max {
-                max = scores[i] + scores[j];
-            }
-        }
-    }
-    // eprintln!("\n{:?}", &scores);
-    max
+    iproduct!(sets.iter().enumerate(), sets.iter().enumerate())
+        .filter(|((_, s1), (_, s2))| s1.is_disjoint(s2))
+        .map(|((i, _), (j, _))| scores[i] + scores[j])
+        .max()
+        .unwrap()
 }
 
 #[cfg(test)]
