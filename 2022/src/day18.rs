@@ -88,8 +88,7 @@ pub fn part2(input: &str) -> usize {
             seen.insert(start);
             let mut new_cubes = BTreeSet::new();
             let mut is_inside = true;
-            while !queue.is_empty() {
-                let point = queue.pop_front().unwrap();
+            while let Some(point) = queue.pop_front() {
                 new_cubes.insert(point);
                 if point.x < 0
                     || point.y < 0
