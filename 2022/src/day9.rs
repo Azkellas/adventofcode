@@ -75,4 +75,15 @@ L 25
 U 20";
         assert_eq!(part2(example), 36);
     }
+
+    static INPUT: &str = include_str!("../input/2022/day9.txt");
+    #[test]
+    fn sample3() {
+        assert_eq!(part1(INPUT), 6175);
+    }
+
+    #[test]
+    fn sample4() {
+        assert_eq!(part2(INPUT), 2578);
+    }
 }

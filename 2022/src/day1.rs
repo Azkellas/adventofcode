@@ -47,4 +47,16 @@ mod tests {
     fn sample2() {
         assert_eq!(part2(&input_generator(EXAMPLE)), 45000);
     }
+
+    static INPUT: &str = include_str!("../input/2022/day1.txt");
+    #[test]
+    fn sample3() {
+        assert_eq!(part1(&input_generator(INPUT)), 69912);
+    }
+
+    #[test]
+    fn sample4() {
+        assert_eq!(part2(&input_generator(INPUT)), 208180);
+    }
+
 }

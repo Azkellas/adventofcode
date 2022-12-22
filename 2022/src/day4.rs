@@ -41,4 +41,16 @@ mod tests {
     fn sample2() {
         assert_eq!(part2(EXAMPLE), 4);
     }
+
+    static INPUT: &str = include_str!("../input/2022/day4.txt");
+    #[test]
+    fn sample3() {
+        assert_eq!(part1(INPUT), 582);
+    }
+
+    #[test]
+    fn sample4() {
+        assert_eq!(part2(INPUT), 893);
+    }
+
 }

@@ -356,4 +356,15 @@ $ ls
     fn sample2() {
         assert_eq!(part2(EXAMPLE), 24933642);
     }
+
+    static INPUT: &str = include_str!("../input/2022/day7.txt");
+    #[test]
+    fn sample3() {
+        assert_eq!(part1(INPUT), 2031851);
+    }
+
+    #[test]
+    fn sample4() {
+        assert_eq!(part2(INPUT), 2568781);
+    }
 }

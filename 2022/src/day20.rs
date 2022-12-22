@@ -83,12 +83,12 @@ pub fn part1(input: &str) -> i64 {
         next.upgrade().unwrap().set_prev(from.clone());
         from.upgrade().unwrap().set_prev(prev.clone());
         from.upgrade().unwrap().set_next(next.clone());
-        eprintln!(
-            "set {} between {} and {}",
-            from.upgrade().unwrap().get_val(),
-            prev.upgrade().unwrap().get_val(),
-            next.upgrade().unwrap().get_val()
-        );
+        // eprintln!(
+        //     "set {} between {} and {}",
+        //     from.upgrade().unwrap().get_val(),
+        //     prev.upgrade().unwrap().get_val(),
+        //     next.upgrade().unwrap().get_val()
+        // );
     }
 
     let spot = numbers.iter().find(|&n| n.borrow().get_val() == 0).unwrap();
@@ -101,7 +101,6 @@ pub fn part1(input: &str) -> i64 {
             res += spot.upgrade().unwrap().get_val();
         }
     }
-    println!();
 
     res
 }
@@ -174,7 +173,6 @@ pub fn part2(input: &str) -> i64 {
             res += spot.upgrade().unwrap().get_val();
         }
     }
-    println!();
 
     res
 }
@@ -200,5 +198,16 @@ mod tests {
     #[test]
     fn sample2() {
         assert_eq!(part2(EXAMPLE), 1623178306);
+    }
+
+    static INPUT: &str = include_str!("../input/2022/day20.txt");
+    #[test]
+    fn sample3() {
+        assert_eq!(part1(INPUT), 2203);
+    }
+
+    #[test]
+    fn sample4() {
+        assert_eq!(part2(INPUT), 6641234038999);
     }
 }

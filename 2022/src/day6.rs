@@ -45,4 +45,15 @@ mod tests {
             assert_eq!(part2(input), result);
         }
     }
+
+    static INPUT: &str = include_str!("../input/2022/day6.txt");
+    #[test]
+    fn sample3() {
+        assert_eq!(part1(INPUT), 1655);
+    }
+
+    #[test]
+    fn sample4() {
+        assert_eq!(part2(INPUT), 2665);
+    }
 }

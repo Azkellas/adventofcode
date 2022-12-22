@@ -73,6 +73,24 @@ mod tests {
         assert_eq!(part2(EXAMPLE), res.to_owned());
     }
 
+    static INPUT: &str = include_str!("../input/2022/day10.txt");
+    #[test]
+    fn sample3() {
+        assert_eq!(part1(INPUT), 12520);
+    }
+
+    #[test]
+    fn sample4() {
+        let res = "
+#### #  # ###  #### ###    ##  ##  #    
+#    #  # #  #    # #  #    # #  # #    
+###  #### #  #   #  #  #    # #    #    
+#    #  # ###   #   ###     # # ## #    
+#    #  # #    #    #    #  # #  # #    
+#### #  # #    #### #     ##   ### #### ";
+        assert_eq!(part2(INPUT), res);
+    }
+
     static EXAMPLE: &str = "\
 addx 15
 addx -11

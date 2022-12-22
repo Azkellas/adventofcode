@@ -211,4 +211,15 @@ Sensor at x=20, y=1: closest beacon is at x=15, y=3";
     fn sample2() {
         assert_eq!(part2(&input_generator(EXAMPLE)), 56000011);
     }
+
+    static INPUT: &str = include_str!("../input/2022/day15.txt");
+    #[test]
+    fn sample3() {
+        assert_eq!(part1(&input_generator(INPUT)), 4811413);
+    }
+
+    #[test]
+    fn sample4() {
+        assert_eq!(part2(&input_generator(INPUT)), 13171855019123);
+    }
 }

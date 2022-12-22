@@ -108,4 +108,15 @@ move 1 from 1 to 2";
     fn sample2() {
         assert_eq!(part2(EXAMPLE), "MCD");
     }
+
+    static INPUT: &str = include_str!("../input/2022/day5.txt");
+    #[test]
+    fn sample3() {
+        assert_eq!(part1(INPUT), "MQSHJMWNH");
+    }
+
+    #[test]
+    fn sample4() {
+        assert_eq!(part2(INPUT), "LLWJRBHVZ");
+    }
 }

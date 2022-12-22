@@ -25,8 +25,6 @@ pub fn input_generator(input: &str) -> Vec<Monkey> {
         .map(|monkey| {
             let lines = monkey.split('\n').collect_vec();
             let [id, starting, operation, test, iftrue, iffalse] = lines[0..6] else {
-                eprintln!("len {}", lines.len());
-                eprintln!("{lines:?}");
                 unreachable!()
             };
             let id = scan_fmt!(id, "Monkey {d}:", usize).unwrap();
@@ -61,7 +59,7 @@ pub fn input_generator(input: &str) -> Vec<Monkey> {
         .collect()
 }
 
-fn debug_monkeys(round: usize, monkeys: &[Monkey]) {
+fn _debug_monkeys(round: usize, monkeys: &[Monkey]) {
     eprintln!("Round {round}:");
     for monkey in monkeys {
         eprintln!("Monkey {}: {}", monkey.id, monkey.holding.iter().join(", "));
@@ -72,7 +70,7 @@ fn debug_monkeys(round: usize, monkeys: &[Monkey]) {
 pub fn part1(input: &str) -> usize {
     let mut monkeys = input_generator(input);
 
-    debug_monkeys(0, &monkeys);
+    // debug_monkeys(0, &monkeys);
 
     for round in 1..=20 {
         for i in 0..monkeys.len() {
@@ -92,7 +90,7 @@ pub fn part1(input: &str) -> usize {
                 monkeys[targets[test as usize]].holding.push(item);
             }
         }
-        debug_monkeys(round, &monkeys);
+        // debug_monkeys(round, &monkeys);
     }
 
     monkeys
@@ -109,7 +107,7 @@ pub fn part2(input: &str) -> usize {
     let mut monkeys = input_generator(input);
     let gcd: usize = monkeys.iter().map(|m| m.test).product();
 
-    debug_monkeys(0, &monkeys);
+    // debug_monkeys(0, &monkeys);
 
     for round in 1..=10000 {
         for i in 0..monkeys.len() {
@@ -131,9 +129,9 @@ pub fn part2(input: &str) -> usize {
                 monkeys[targets[test as usize]].holding.push(item);
             }
         }
-        if round % 100 == 0 {
-            debug_monkeys(round, &monkeys);
-        }
+        // if round % 100 == 0 {
+        //     debug_monkeys(round, &monkeys);
+        // }
     }
 
     monkeys
@@ -186,5 +184,16 @@ Monkey 3:
     #[test]
     fn sample2() {
         assert_eq!(part2(EXAMPLE), 2713310158);
+    }
+
+    static INPUT: &str = include_str!("../input/2022/day11.txt");
+    #[test]
+    fn sample3() {
+        assert_eq!(part1(INPUT), 121450);
+    }
+
+    #[test]
+    fn sample4() {
+        assert_eq!(part2(INPUT), 28244037010);
     }
 }

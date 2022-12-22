@@ -61,4 +61,15 @@ CrZsJsPPZsGzwwsLwLmpwMDw";
     fn sample2() {
         assert_eq!(part2(EXAMPLE), 70);
     }
+
+    static INPUT: &str = include_str!("../input/2022/day3.txt");
+    #[test]
+    fn sample3() {
+        assert_eq!(part1(INPUT), 7428);
+    }
+
+    #[test]
+    fn sample4() {
+        assert_eq!(part2(INPUT), 2650);
+    }
 }

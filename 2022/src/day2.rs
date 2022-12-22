@@ -53,4 +53,15 @@ C Z";
     fn sample2() {
         assert_eq!(part2(&input_generator(EXAMPLE)), 12);
     }
+
+    static INPUT: &str = include_str!("../input/2022/day2.txt");
+    #[test]
+    fn sample3() {
+        assert_eq!(part1(&input_generator(INPUT)), 13052);
+    }
+
+    #[test]
+    fn sample4() {
+        assert_eq!(part2(&input_generator(INPUT)), 13693);
+    }
 }

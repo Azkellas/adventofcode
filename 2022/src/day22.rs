@@ -170,7 +170,6 @@ pub fn part1(input: &str) -> i64 {
     }
 
     let (row, col, facing) = (pos.y + 1, pos.x + 1, dir as i64);
-    dbg!((row, col, facing));
     1000 * row + 4 * col + facing
 }
 
@@ -295,7 +294,6 @@ pub fn part2(input: &str) -> i64 {
     let mut size = input.lines().next().unwrap().len() as i64;
     size = if size < 50 { 4 } else { 50 };
 
-    eprintln!("size = {size}");
     let (map, commands) = input_generator(input);
     let size = f64::sqrt((map.len() / 6) as f64) as i64;
 
@@ -337,7 +335,6 @@ pub fn part2(input: &str) -> i64 {
     }
 
     let (row, col, facing) = (pos.y + 1, pos.x + 1, dir as i64);
-    dbg!((row, col, facing));
     1000 * row + 4 * col + facing
 }
 
@@ -369,5 +366,16 @@ mod tests {
     #[test]
     fn sample2() {
         assert_eq!(part2(EXAMPLE), 5031);
+    }
+
+    static INPUT: &str = include_str!("../input/2022/day22.txt");
+    #[test]
+    fn sample3() {
+        assert_eq!(part1(INPUT), 164014);
+    }
+
+    #[test]
+    fn sample4() {
+        assert_eq!(part2(INPUT), 47525);
     }
 }

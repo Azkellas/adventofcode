@@ -117,8 +117,6 @@ pub fn part2(input: &str) -> i64 {
             }
         }
     }
-    // deps.push(node);
-    println!("{:?}", deps);
 
     let backup = monkeys.clone();
     let mut target;
@@ -164,7 +162,7 @@ pub fn part2(input: &str) -> i64 {
         }
     }
 
-    eprintln!("target = {target}");
+    // eprintln!("target = {target}");
 
     for (idx, node) in deps.iter().enumerate().rev() {
         if node.as_str() == "humn" {
@@ -226,5 +224,16 @@ hmdt: 32";
     #[test]
     fn sample2() {
         assert_eq!(part2(EXAMPLE), 301);
+    }
+
+    static INPUT: &str = include_str!("../input/2022/day21.txt");
+    #[test]
+    fn sample3() {
+        assert_eq!(part1(INPUT), 70674280581468);
+    }
+
+    #[test]
+    fn sample4() {
+        assert_eq!(part2(INPUT), 3243420789721);
     }
 }
