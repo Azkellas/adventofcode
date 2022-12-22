@@ -1,6 +1,6 @@
 use std::collections::{BTreeSet, VecDeque};
 
-use itertools::{iproduct, Itertools};
+use itertools::iproduct;
 use scan_fmt::*;
 
 #[derive(
