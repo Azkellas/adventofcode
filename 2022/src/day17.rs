@@ -1,128 +1,42 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, BTreeSet};
 
-#[aoc(day17, part1)]
-pub fn part1(input: &str) -> usize {
-    let tiles = vec![
-        vec![(0, 0), (1, 0), (2, 0), (3, 0)],
-        vec![(1, 0), (0, 1), (1, 1), (2, 1), (1, 2)],
-        vec![(0, 0), (1, 0), (2, 0), (2, 1), (2, 2)],
-        vec![(0, 0), (0, 1), (0, 2), (0, 3)],
-        vec![(0, 0), (1, 0), (0, 1), (1, 1)],
-    ];
-
-    let width = 7;
-    let mut map = vec![];
-    map.push(vec![true; width]);
-
-    let count = 2022;
-
-    let mut wind_idx = 0;
-
-    for step in 0..count {
-        let tile_id = step % 5;
-        let tile = &tiles[tile_id];
-        let mut pos = (2, map.len() + 3);
-
-        loop {
-            let wind_dir = input.as_bytes()[wind_idx];
-            wind_idx += 1;
-            if wind_idx == input.as_bytes().len() {
-                wind_idx = 0;
-            }
-
-            // wind
-            let mut possible = true;
-            for elt in tile {
-                let mut elt_pos = (pos.0 + elt.0, pos.1 + elt.1);
-                if elt_pos.0 == 0 && wind_dir == b'<' {
-                    possible = false;
-                    break;
-                }
-                if wind_dir == b'<' {
-                    elt_pos.0 -= 1;
-                } else {
-                    elt_pos.0 += 1;
-                }
-                // elt_pos.0 += if wind_dir == b'<' { -(1 as i32) } else { 1 } as usize;
-                if elt_pos.0 >= width {
-                    possible = false;
-                    break;
-                }
-                if elt_pos.1 < map.len() && map[elt_pos.1][elt_pos.0] {
-                    possible = false;
-                    break;
-                }
-            }
-            if possible {
-                if wind_dir == b'<' {
-                    pos.0 -= 1;
-                } else {
-                    pos.0 += 1;
-                }
-            }
-
-            // gravity
-            let mut possible = true;
-            for elt in tile {
-                let mut elt_pos = (pos.0 + elt.0, pos.1 + elt.1);
-                elt_pos.1 -= 1;
-                if elt_pos.1 < map.len() && map[elt_pos.1][elt_pos.0] {
-                    possible = false;
-                    break;
-                }
-            }
-            if possible {
-                pos.1 -= 1;
-            } else {
-                // eprintln!("adding tile {tile_id} at height {}", pos.1);
-                for elt in tile {
-                    let elt_pos = (pos.0 + elt.0, pos.1 + elt.1);
-                    while elt_pos.1 >= map.len() {
-                        map.push(vec![false; width]);
-                    }
-                    map[elt_pos.1][elt_pos.0] = true;
-                }
-                break;
-            }
-        }
-        // // debug
-        // if step < 10 {
-        //     for y in (1..map.len()).rev() {
-        //         eprintln!("{y}|{}|", map[y].iter().map(|b| if *b { '#' } else {'.' }).collect::<String>());
-        //     }
-        //     eprintln!("+-------+");
-        //     eprintln!()
-        // }
-    }
-
-    map.len() - 1
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord,     derive_more::Add,
+    derive_more::AddAssign,
+    derive_more::Sub,
+    derive_more::Mul,
+)]
+struct Pos {
+    x: i64,
+    y: i64,
 }
 
-#[aoc(day17, part2)]
-pub fn part2(input: &str) -> u64 {
+fn solve(input: &str, steps: usize) -> i64 {
     let tiles = vec![
-        vec![(0, 0), (1, 0), (2, 0), (3, 0)],
-        vec![(1, 0), (0, 1), (1, 1), (2, 1), (1, 2)],
-        vec![(0, 0), (1, 0), (2, 0), (2, 1), (2, 2)],
-        vec![(0, 0), (0, 1), (0, 2), (0, 3)],
-        vec![(0, 0), (1, 0), (0, 1), (1, 1)],
+        vec![Pos{x:0, y:0}, Pos{x:1, y:0}, Pos{x:2, y:0}, Pos{x:3, y:0}],
+        vec![Pos{x:1, y:0}, Pos{x:0, y:1}, Pos{x:1, y:1}, Pos{x:2, y:1}, Pos{x:1, y:2}],
+        vec![Pos{x:0, y:0}, Pos{x:1, y:0}, Pos{x:2, y:0}, Pos{x:2, y:1}, Pos{x:2, y:2}],
+        vec![Pos{x:0, y:0}, Pos{x:0, y:1}, Pos{x:0, y:2}, Pos{x:0, y:3}],
+        vec![Pos{x:0, y:0}, Pos{x:1, y:0}, Pos{x:0, y:1}, Pos{x:1, y:1}],
     ];
 
     let width = 7;
-    let mut map = vec![];
-    map.push(vec![true; width]);
+    let mut map = BTreeSet::new();
+    for x in 0..7 {
+        map.insert(Pos{x, y: 0});
+    }
+
+    let mut seen: HashMap<(usize, usize), Vec<(usize, i64)>> = HashMap::new();
 
     let mut wind_idx = 0;
 
-    let mut seen: HashMap<(usize, usize), Vec<(usize, usize)>> = HashMap::new();
-    let mut step = 0;
-    loop {
+    for step in 0..steps {
         let tile_id = step % 5;
         let tile = &tiles[tile_id];
-        let mut pos = (2, map.len() + 3);
+        let height = map.iter().map(|v| v.y).max().unwrap();
+        let mut pos = Pos{x: 2, y: height + 4};
 
         let key = (wind_idx, tile_id);
-        let value = (step, map.len());
+        let value = (step, height);
 
         if seen.contains_key(&key) {
             let vals = seen.get_mut(&key).unwrap();
@@ -138,12 +52,12 @@ pub fn part2(input: &str) -> u64 {
                 if delta == prev_delta {
                     let delta_height = delta.1;
                     let delta_step = delta.0;
-                    let turns: u64 = 1_000_000_000_000;
-                    let turns_remaining = turns - step as u64;
-                    let plays = turns_remaining / delta_step as u64;
-                    let to_play = turns_remaining % delta_step as u64;
+                    let turns_remaining = steps - step;
+                    let plays = turns_remaining / delta_step;
+                    let to_play = turns_remaining % delta_step;
                     if to_play == 0 {
-                        return map.len() as u64 + plays * delta_height as u64 - 1;
+                        // eprintln!("found recursion after {step} steps");
+                        return map.iter().map(|v| v.y).max().unwrap() + plays as i64 * delta_height;
                     }
                 } else {
                     vals.push(value);
@@ -152,6 +66,7 @@ pub fn part2(input: &str) -> u64 {
         } else {
             seen.insert(key, vec![value]);
         }
+
         loop {
             let wind_dir = input.as_bytes()[wind_idx];
             wind_idx += 1;
@@ -162,65 +77,55 @@ pub fn part2(input: &str) -> u64 {
             // wind
             let mut possible = true;
             for elt in tile {
-                let mut elt_pos = (pos.0 + elt.0, pos.1 + elt.1);
-                if elt_pos.0 == 0 && wind_dir == b'<' {
+                let mut elt_pos = pos + *elt;
+                elt_pos.x += if wind_dir == b'<' { -1 } else { 1 };
+
+                if elt_pos.x < 0 || elt_pos.x >= width {
                     possible = false;
                     break;
                 }
-                if wind_dir == b'<' {
-                    elt_pos.0 -= 1;
-                } else {
-                    elt_pos.0 += 1;
-                }
-                if elt_pos.0 >= width {
-                    possible = false;
-                    break;
-                }
-                if elt_pos.1 < map.len() && map[elt_pos.1][elt_pos.0] {
+                if map.contains(&elt_pos) {
                     possible = false;
                     break;
                 }
             }
             if possible {
-                if wind_dir == b'<' {
-                    pos.0 -= 1;
-                } else {
-                    pos.0 += 1;
-                }
+                pos.x += if wind_dir == b'<' { -1 } else { 1 };
             }
 
             // gravity
             let mut possible = true;
             for elt in tile {
-                let mut elt_pos = (pos.0 + elt.0, pos.1 + elt.1);
-                elt_pos.1 -= 1;
-                if elt_pos.1 < map.len() && map[elt_pos.1][elt_pos.0] {
+                let mut elt_pos = pos + *elt;
+                elt_pos.y -= 1;
+                if map.contains(&elt_pos) {
                     possible = false;
                     break;
                 }
             }
             if possible {
-                pos.1 -= 1;
-            } else {
-                // eprintln!("adding tile {tile_id} at height {}", pos.1);
+                pos.y -= 1;
+            }
+            else {
                 for elt in tile {
-                    let elt_pos = (pos.0 + elt.0, pos.1 + elt.1);
-                    while elt_pos.1 >= map.len() {
-                        map.push(vec![false; width]);
-                    }
-                    map[elt_pos.1][elt_pos.0] = true;
+                    let elt_pos = pos + *elt;
+                    map.insert(elt_pos);
                 }
                 break;
             }
         }
-
-        step += 1;
-        if step == 100_000 {
-            break;
-        }
     }
 
-    unreachable!()
+    map.iter().map(|v| v.y).max().unwrap()
+}
+#[aoc(day17, part1)]
+pub fn part1(input: &str) -> i64 {
+    solve(input, 2022)
+}
+
+#[aoc(day17, part2)]
+pub fn part2(input: &str) -> i64 {
+    solve(input, 1_000_000_000_000)
 }
 
 #[cfg(test)]
@@ -237,5 +142,16 @@ mod tests {
     #[test]
     fn sample2() {
         assert_eq!(part2(EXAMPLE), 1514285714288);
+    }
+    
+    static INPUT: &str = include_str!("../input/2022/day17.txt");
+    #[test]
+    fn sample3() {
+        assert_eq!(part1(INPUT), 3157);
+    }
+
+    #[test]
+    fn sample4() {
+        assert_eq!(part2(INPUT), 1581449275319);
     }
 }

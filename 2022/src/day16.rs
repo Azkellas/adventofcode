@@ -210,14 +210,33 @@ pub fn part2(input: &str) -> usize {
         }
     }
 
-    let sets = powerset(&valids);
+    let sets = powerset(&valids).into_iter()
+        .filter(|set| {
+            let half = valids.len() / 2;
+            let nodes = set.len();
+            if nodes < 2 {
+                return false;
+            }
+            let links = nodes * (nodes - 1) / 2;
+
+            let mut res = 0;
+            for i in set {
+                for j in set {
+                    res += data.map[*i][*j];
+                }
+            }
+            let res = res / links * nodes;
+            nodes >= half - 2 && nodes <= half + 2 &&
+            res >= 10 && res <= 50
+        }).collect_vec();
+
     let mut scores = vec![0; sets.len()];
-    println!("{:?}", &valids);
-    println!("{}", sets.len());
+    // println!("{:?}", &valids);
+    println!("kept = {}", sets.len());
     for (idx, set) in sets.iter().enumerate() {
-        if idx % 1000 == 0 {
-            eprintln!("{idx}");
-        }
+        // if idx % 1000 == 0 {
+        //     eprintln!("{idx}");
+        // }
         data.left_to_open = 0;
         data.current_max = 0;
         data.max_flow = 0;
@@ -269,5 +288,16 @@ Valve JJ has flow rate=21; tunnel leads to valve II";
     #[test]
     fn sample2() {
         assert_eq!(part2(EXAMPLE), 1707);
+    }
+
+    static INPUT: &str = include_str!("../input/2022/day16.txt");
+    #[test]
+    fn sample3() {
+        assert_eq!(part1(INPUT), 1720);
+    }
+
+    #[test]
+    fn sample4() {
+        assert_eq!(part2(INPUT), 2582);
     }
 }

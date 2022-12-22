@@ -14,34 +14,6 @@ struct Data {
     resources: [usize; 4],
 }
 
-fn _can_buy(resources: &[usize; 4], cost: &[usize; 4]) -> bool {
-    resources.iter().enumerate().all(|(i, v)| *v >= cost[i])
-}
-fn _buy(resources: &mut [usize; 4], cost: &[usize; 4]) {
-    resources
-        .iter_mut()
-        .enumerate()
-        .for_each(|(i, v)| *v -= cost[i])
-}
-fn _refund(resources: &mut [usize; 4], cost: &[usize; 4]) {
-    resources
-        .iter_mut()
-        .enumerate()
-        .for_each(|(i, v)| *v += cost[i])
-}
-fn _play_turn(resources: &mut [usize; 4], robots: &[usize; 4]) {
-    resources
-        .iter_mut()
-        .enumerate()
-        .for_each(|(i, v)| *v += robots[i])
-}
-fn _undo_turn(resources: &mut [usize; 4], robots: &[usize; 4]) {
-    resources
-        .iter_mut()
-        .enumerate()
-        .for_each(|(i, v)| *v -= robots[i])
-}
-
 fn backtrace(
     blueprint: &Blueprint,
     turns_left: usize,
@@ -49,7 +21,7 @@ fn backtrace(
     cache: &mut BTreeMap<[usize; 4], Vec<(usize, [usize; 4])>>,
     seen: &mut usize,
     max_at: &mut Vec<usize>,
-    // max_at_robots: &mut Vec<usize>)
+    late_game: usize,
 ) -> usize {
     *seen += 1;
 
@@ -65,10 +37,10 @@ fn backtrace(
 
     let mut res = data.resources[3] + data.robots[3] * turns_left;
 
-    // if turns_left == 0 || max_at[turns_left] > data.resources[3] + 2 {
-    //     return res;
-    // }
-    // max_at[turns_left] = max_at[turns_left].max(data.resources[3]);
+    if turns_left == 0 || max_at[turns_left] > data.resources[3] + 2 {
+        return res;
+    }
+    max_at[turns_left] = max_at[turns_left].max(data.resources[3]);
 
     for robot_id in (0..4).rev() {
         let cost = blueprint.costs[robot_id];
@@ -85,7 +57,7 @@ fn backtrace(
             }
         }
         let required = *availables.iter().max().unwrap();
-        if required < turns_left && !(robot_id <= 1 && turns_left < 12) {
+        if required < turns_left && !(robot_id <= 1 && turns_left < late_game) {
             for i in 0..4 {
                 data.resources[i] += required * data.robots[i];
                 data.resources[i] -= cost[i];
@@ -98,6 +70,7 @@ fn backtrace(
                 cache,
                 seen,
                 max_at,
+                late_game,
             ));
             data.robots[robot_id] -= 1;
             for i in 0..4 {
@@ -167,9 +140,8 @@ pub fn part1(input: &str) -> usize {
                 &mut cache,
                 &mut seen,
                 &mut max_at,
+                8,
             );
-            println!("part1: id {} = {}", blueprint.id, res);
-            println!("cache size {}, and seen {seen}", cache.len());
             assert_eq!(data.resources, [0, 0, 0, 0]);
             assert_eq!(data.robots, [1, 0, 0, 0]);
             res * blueprint.id
@@ -201,9 +173,8 @@ pub fn part2(input: &str) -> usize {
                 &mut cache,
                 &mut seen,
                 &mut max_at,
+                15,
             );
-            println!("part2: id {} = {}", blueprint.id, res);
-            // println!("cache size {}, and seen {seen}", cache.len());
             assert_eq!(data.resources, [0, 0, 0, 0]);
             assert_eq!(data.robots, [1, 0, 0, 0]);
             res
@@ -227,5 +198,16 @@ Blueprint 2: Each ore robot costs 2 ore. Each clay robot costs 3 ore. Each obsid
     #[test]
     fn sample2() {
         assert_eq!(part2(EXAMPLE), 3472);
+    }
+
+    static INPUT: &str = include_str!("../input/2022/day19.txt");
+    #[test]
+    fn sample3() {
+        assert_eq!(part1(INPUT), 1192);
+    }
+
+    #[test]
+    fn sample4() {
+        assert_eq!(part2(INPUT), 14725);
     }
 }
