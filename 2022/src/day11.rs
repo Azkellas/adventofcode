@@ -11,7 +11,7 @@ enum Operation {
 
 #[derive(Debug)]
 pub struct Monkey {
-    id: usize,
+    _id: usize,
     operation: Operation,
     holding: Vec<usize>,
     test: usize,
@@ -48,7 +48,7 @@ pub fn input_generator(input: &str) -> Vec<Monkey> {
                 .collect_vec();
 
             Monkey {
-                id,
+                _id: id,
                 operation,
                 holding,
                 test,
@@ -62,7 +62,7 @@ pub fn input_generator(input: &str) -> Vec<Monkey> {
 fn _debug_monkeys(round: usize, monkeys: &[Monkey]) {
     eprintln!("Round {round}:");
     for monkey in monkeys {
-        eprintln!("Monkey {}: {}", monkey.id, monkey.holding.iter().join(", "));
+        eprintln!("Monkey {}: {}", monkey._id, monkey.holding.iter().join(", "));
     }
     eprintln!();
 }
@@ -72,7 +72,7 @@ pub fn part1(input: &str) -> usize {
 
     // debug_monkeys(0, &monkeys);
 
-    for round in 1..=20 {
+    for _round in 1..=20 {
         for i in 0..monkeys.len() {
             let items = monkeys[i].holding.clone();
             monkeys[i].holding = vec![];
@@ -109,7 +109,7 @@ pub fn part2(input: &str) -> usize {
 
     // debug_monkeys(0, &monkeys);
 
-    for round in 1..=10000 {
+    for _round in 1..=10000 {
         for i in 0..monkeys.len() {
             let items = monkeys[i].holding.clone();
             monkeys[i].holding = vec![];

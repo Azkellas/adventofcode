@@ -291,9 +291,6 @@ fn wrap(pos: &Pos, (face, dir): (usize, Direction), size: i64) -> (Pos, (usize, 
 
 #[aoc(day22, part2)]
 pub fn part2(input: &str) -> i64 {
-    let mut size = input.lines().next().unwrap().len() as i64;
-    size = if size < 50 { 4 } else { 50 };
-
     let (map, commands) = input_generator(input);
     let size = f64::sqrt((map.len() / 6) as f64) as i64;
 
