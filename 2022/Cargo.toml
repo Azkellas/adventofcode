@@ -10,6 +10,7 @@ aoc-runner = "0.3.0"
 aoc-runner-derive = "0.3.0"
 derive_more = "0.99.17"
 itertools = "0.10.5"
+keyed_priority_queue = "0.4.1"
 nalgebra = "0.31.4"
 regex = { version = "1.7.0", features = ["pattern"] } 
 scan_fmt = "0.2.6"

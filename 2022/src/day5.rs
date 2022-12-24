@@ -100,23 +100,23 @@ move 3 from 1 to 3
 move 2 from 2 to 1
 move 1 from 1 to 2";
     #[test]
-    fn sample1() {
+    fn example_part1() {
         assert_eq!(part1(EXAMPLE), "CMZ");
     }
 
     #[test]
-    fn sample2() {
+    fn example_part2() {
         assert_eq!(part2(EXAMPLE), "MCD");
     }
 
     static INPUT: &str = include_str!("../input/2022/day5.txt");
     #[test]
-    fn sample3() {
+    fn input_part1() {
         assert_eq!(part1(INPUT), "MQSHJMWNH");
     }
 
     #[test]
-    fn sample4() {
+    fn input_part2() {
         assert_eq!(part2(INPUT), "LLWJRBHVZ");
     }
 }

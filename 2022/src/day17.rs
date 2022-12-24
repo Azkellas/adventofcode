@@ -135,23 +135,23 @@ mod tests {
     static EXAMPLE: &str = ">>><<><>><<<>><>>><<<>>><<<><<<>><>><<>>";
 
     #[test]
-    fn sample1() {
+    fn example_part1() {
         assert_eq!(part1(EXAMPLE), 3068);
     }
 
     #[test]
-    fn sample2() {
+    fn example_part2() {
         assert_eq!(part2(EXAMPLE), 1514285714288);
     }
     
     static INPUT: &str = include_str!("../input/2022/day17.txt");
     #[test]
-    fn sample3() {
+    fn input_part1() {
         assert_eq!(part1(INPUT), 3157);
     }
 
     #[test]
-    fn sample4() {
+    fn input_part2() {
         assert_eq!(part2(INPUT), 1581449275319);
     }
 }

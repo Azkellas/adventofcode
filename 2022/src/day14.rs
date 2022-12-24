@@ -126,23 +126,23 @@ mod tests {
 503,4 -> 502,4 -> 502,9 -> 494,9";
 
     #[test]
-    fn sample1() {
+    fn example_part1() {
         assert_eq!(part1(&input_generator(EXAMPLE)), 24);
     }
 
     #[test]
-    fn sample2() {
+    fn example_part2() {
         assert_eq!(part2(&input_generator(EXAMPLE)), 93);
     }
 
     static INPUT: &str = include_str!("../input/2022/day14.txt");
     #[test]
-    fn sample3() {
+    fn input_part1() {
         assert_eq!(part1(&input_generator(INPUT)), 768);
     }
 
     #[test]
-    fn sample4() {
+    fn input_part2() {
         assert_eq!(part2(&input_generator(INPUT)), 26686);
     }
 }

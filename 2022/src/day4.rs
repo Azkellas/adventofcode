@@ -33,23 +33,23 @@ mod tests {
 6-6,4-6
 2-6,4-8";
     #[test]
-    fn sample1() {
+    fn example_part1() {
         assert_eq!(part1(EXAMPLE), 2);
     }
 
     #[test]
-    fn sample2() {
+    fn example_part2() {
         assert_eq!(part2(EXAMPLE), 4);
     }
 
     static INPUT: &str = include_str!("../input/2022/day4.txt");
     #[test]
-    fn sample3() {
+    fn input_part1() {
         assert_eq!(part1(INPUT), 582);
     }
 
     #[test]
-    fn sample4() {
+    fn input_part2() {
         assert_eq!(part2(INPUT), 893);
     }
 

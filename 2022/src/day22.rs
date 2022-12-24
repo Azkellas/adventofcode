@@ -356,23 +356,23 @@ mod tests {
 10R5L5R10L4R5L5";
 
     #[test]
-    fn sample1() {
+    fn example_part1() {
         assert_eq!(part1(EXAMPLE), 6032);
     }
 
     #[test]
-    fn sample2() {
+    fn example_part2() {
         assert_eq!(part2(EXAMPLE), 5031);
     }
 
     static INPUT: &str = include_str!("../input/2022/day22.txt");
     #[test]
-    fn sample3() {
+    fn input_part1() {
         assert_eq!(part1(INPUT), 164014);
     }
 
     #[test]
-    fn sample4() {
+    fn input_part2() {
         assert_eq!(part2(INPUT), 47525);
     }
 }

@@ -49,7 +49,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn sample1() {
+    fn example_part1() {
         let example = "\
 R 4
 U 4
@@ -63,7 +63,7 @@ R 2";
     }
 
     #[test]
-    fn sample2() {
+    fn example_part2() {
         let example = "\
 R 5
 U 8
@@ -78,12 +78,12 @@ U 20";
 
     static INPUT: &str = include_str!("../input/2022/day9.txt");
     #[test]
-    fn sample3() {
+    fn input_part1() {
         assert_eq!(part1(INPUT), 6175);
     }
 
     #[test]
-    fn sample4() {
+    fn input_part2() {
         assert_eq!(part2(INPUT), 2578);
     }
 }

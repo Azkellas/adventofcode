@@ -348,23 +348,23 @@ $ ls
 5626152 d.ext
 7214296 k";
     #[test]
-    fn sample1() {
+    fn example_part1() {
         assert_eq!(part1(EXAMPLE), 95437);
     }
 
     #[test]
-    fn sample2() {
+    fn example_part2() {
         assert_eq!(part2(EXAMPLE), 24933642);
     }
 
     static INPUT: &str = include_str!("../input/2022/day7.txt");
     #[test]
-    fn sample3() {
+    fn input_part1() {
         assert_eq!(part1(INPUT), 2031851);
     }
 
     #[test]
-    fn sample4() {
+    fn input_part2() {
         assert_eq!(part2(INPUT), 2568781);
     }
 }

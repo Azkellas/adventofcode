@@ -203,23 +203,23 @@ Sensor at x=14, y=3: closest beacon is at x=15, y=3
 Sensor at x=20, y=1: closest beacon is at x=15, y=3";
 
     #[test]
-    fn sample1() {
+    fn example_part1() {
         assert_eq!(part1(&input_generator(EXAMPLE)), 26);
     }
 
     #[test]
-    fn sample2() {
+    fn example_part2() {
         assert_eq!(part2(&input_generator(EXAMPLE)), 56000011);
     }
 
     static INPUT: &str = include_str!("../input/2022/day15.txt");
     #[test]
-    fn sample3() {
+    fn input_part1() {
         assert_eq!(part1(&input_generator(INPUT)), 4811413);
     }
 
     #[test]
-    fn sample4() {
+    fn input_part2() {
         assert_eq!(part2(&input_generator(INPUT)), 13171855019123);
     }
 }
