@@ -1,10 +1,9 @@
 use regex::Regex;
 use std::collections::HashSet;
 
-
 pub struct Instruction {
     pub turn: String,
-    pub steps: i32
+    pub steps: i32,
 }
 
 #[aoc_generator(day1)]
@@ -14,16 +13,16 @@ pub fn input_generator(input: &str) -> Vec<Instruction> {
     let mut instructions = vec![];
     for cap in re.captures_iter(input) {
         let (turn, steps) = (cap[1].to_owned(), cap[2].parse::<i32>().unwrap());
-        instructions.push(Instruction{turn, steps});
+        instructions.push(Instruction { turn, steps });
     }
-    
+
     instructions
 }
 
 const NORTH: i32 = 0;
-const EAST: i32  = 1;
+const EAST: i32 = 1;
 const SOUTH: i32 = 2;
-const WEST: i32  = 3;
+const WEST: i32 = 3;
 
 #[aoc(day1, part1)]
 pub fn part1(instructions: &[Instruction]) -> i32 {
@@ -48,7 +47,7 @@ pub fn part1(instructions: &[Instruction]) -> i32 {
             EAST  => x += inst.steps,
             SOUTH => y += inst.steps,
             WEST  => x -= inst.steps,
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
     i32::abs(x) + i32::abs(y)
@@ -82,7 +81,7 @@ pub fn part2(instructions: &[Instruction]) -> i32 {
             SOUTH => ( 0,  1),
             WEST  => (-1,  0),
             // _ => (0, 0)
-            _ => unreachable!()
+            _ => unreachable!(),
         };
 
         for _ in 0..inst.steps {
@@ -121,5 +120,4 @@ mod tests {
     fn sample4() {
         assert_eq!(part2(&input_generator("R8, R4, R4, R8")), 4);
     }
-
 }

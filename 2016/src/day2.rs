@@ -26,7 +26,8 @@ pub fn part2(input: &str) -> String {
         "  2 3 4  ",
         "5 6 7 8 9",
         "  A B C  ",
-        "    D    "];
+        "    D    ",
+    ];
 
     let (w, h) = (pad[0].len() as i32, pad.len() as i32);
 
@@ -50,18 +51,16 @@ pub fn part2(input: &str) -> String {
                 continue;
             }
             (x, y) = (nx, ny);
-
         }
         res.push(pad[y as usize].as_bytes()[x as usize]);
     }
     str::from_utf8(&res).unwrap().to_owned()
-
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     static EXAMPLE: &str = "ULL
     RRDDD
     LURDL
@@ -71,10 +70,8 @@ mod tests {
         assert_eq!(part1(EXAMPLE), 1985);
     }
 
-
     #[test]
     fn sample2() {
         assert_eq!(part2(EXAMPLE), "5DB3");
     }
-
 }
