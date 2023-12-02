@@ -1,9 +1,9 @@
 use itertools::Itertools;
 
 #[aoc(day1, part1)]
-pub fn part1(elves: &str) -> u32 {
-    elves
-        .split_whitespace()
+pub fn part1(calibration: &str) -> u32 {
+    calibration
+        .lines()
         .map(|line| {
             let digits = line
                 .chars()
@@ -16,9 +16,9 @@ pub fn part1(elves: &str) -> u32 {
 }
 
 #[aoc(day1, part2)]
-pub fn part2(elves: &str) -> u32 {
+pub fn part2(calibration: &str) -> u32 {
     part1(
-        elves
+        calibration
             .replace("one", "one1one")
             .replace("two", "two2two")
             .replace("three", "three3three")
