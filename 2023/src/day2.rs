@@ -45,19 +45,11 @@ pub fn input_generator(games: &str) -> Vec<Game> {
                 })
                 .collect_vec();
 
-            let minimal_set = hands.iter().fold(
-                Hand {
-                    red: 0,
-                    blue: 0,
-                    green: 0,
-                },
-                |mut acc, hand| {
-                    acc.red = acc.red.max(hand.red);
-                    acc.blue = acc.blue.max(hand.blue);
-                    acc.green = acc.green.max(hand.green);
-                    acc
-                },
-            );
+            let minimal_set = Hand {
+                red: hands.iter().max_by_key(|hand| hand.red).unwrap().red,
+                blue: hands.iter().max_by_key(|hand| hand.blue).unwrap().blue,
+                green: hands.iter().max_by_key(|hand| hand.green).unwrap().green,
+            };
 
             Game {
                 id,
