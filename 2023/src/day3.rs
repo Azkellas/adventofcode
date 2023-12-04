@@ -39,17 +39,11 @@ impl Item {
     }
 
     pub fn is_symbol(&self) -> bool {
-        match self {
-            Self::Symbol(_, _) => true,
-            _ => false,
-        }
+        matches!(self, Self::Symbol(_, _))
     }
 
     pub fn is_number(&self) -> bool {
-        match self {
-            Self::Number(_, _) => true,
-            _ => false,
-        }
+        matches!(self, Self::Number(_, _))
     }
 }
 
@@ -98,8 +92,7 @@ pub fn part1(grid: &str) -> u32 {
         .filter(|item| match item {
             Item::Number(_, _) => items
                 .iter()
-                .find(|other| other.is_symbol() && item.is_adjacent(other))
-                .is_some(),
+                .any(|other| other.is_symbol() && item.is_adjacent(other)),
             _ => unreachable!(),
         })
         .map(|item| match item {

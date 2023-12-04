@@ -18,7 +18,6 @@ pub struct Game {
 pub fn input_generator(games: &str) -> Vec<Game> {
     games
         .lines()
-        .into_iter()
         .map(|line| {
             let (game_id, hands) = line.split_once(": ").unwrap();
             let id = scan_fmt!(game_id, "Game {d}", u32).unwrap();
