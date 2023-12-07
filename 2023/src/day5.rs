@@ -48,6 +48,7 @@ pub struct Map {
 }
 
 pub fn input_generator(almanac: &str) -> (Vec<usize>, Vec<Map>) {
+    let almanac = almanac.replace("\r\n", "\n");
     let (seeds, maps) = almanac.split_once("\n\n").unwrap();
     let seeds = seeds
         .lines()

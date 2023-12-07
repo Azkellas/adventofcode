@@ -105,8 +105,8 @@ Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11";
         assert_eq!(part1(INPUT), 21558);
     }
 
-    // #[test]
-    // fn input_part2() {
-    //     assert_eq!(part2(INPUT), 86879020);
-    // }
+    #[test]
+    fn input_part2() {
+        assert_eq!(part2(INPUT), 10425665);
+    }
 }
