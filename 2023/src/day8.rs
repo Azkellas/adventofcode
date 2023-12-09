@@ -1,6 +1,6 @@
 use itertools::Itertools;
 use scan_fmt::*;
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::BTreeMap;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Part {
@@ -23,7 +23,7 @@ struct Node {
     right: usize,
 }
 
-pub fn input_generator(part: Part, input: &str) -> (String, Vec<Node>) {
+fn input_generator(part: Part, input: &str) -> (String, Vec<Node>) {
     let mut lines = input.lines();
     let moves = lines.next().unwrap();
 
@@ -42,17 +42,17 @@ pub fn input_generator(part: Part, input: &str) -> (String, Vec<Node>) {
         }
 
         let from = seens.get(&from).copied().unwrap_or_else(|| {
-            let id = seens.len() as usize;
+            let id = seens.len();
             seens.insert(from.clone(), id);
             id
         });
         let left = seens.get(&left).copied().unwrap_or_else(|| {
-            let id = seens.len() as usize;
+            let id = seens.len();
             seens.insert(left.clone(), id);
             id
         });
         let right = seens.get(&right).copied().unwrap_or_else(|| {
-            let id = seens.len() as usize;
+            let id = seens.len();
             seens.insert(right.clone(), id);
             id
         });
@@ -147,15 +147,15 @@ pub fn part2(calibration: &str) -> usize {
         seens.push(seen);
     }
 
-    for (idx, seen) in seens.iter_mut().enumerate() {
-        println!(
-            "for {}: seens = {:?}, periods = {}, starts = {}",
-            idx,
-            seen.keys(),
-            periods[idx],
-            starts[idx]
-        );
-    }
+    // for (idx, seen) in seens.iter_mut().enumerate() {
+    //     println!(
+    //         "for {}: seens = {:?}, periods = {}, starts = {}",
+    //         idx,
+    //         seen.keys(),
+    //         periods[idx],
+    //         starts[idx]
+    //     );
+    // }
 
     // we can do this because the orbits start at index 0 and are pairwise coprimes.
     periods.into_iter().fold(1, num::integer::lcm)

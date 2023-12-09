@@ -93,11 +93,11 @@ pub fn part1(grid: &str) -> u32 {
             Item::Number(_, _) => items
                 .iter()
                 .any(|other| other.is_symbol() && item.is_adjacent(other)),
-            _ => unreachable!(),
+            Item::Symbol(..) => unreachable!(),
         })
         .map(|item| match item {
             Item::Number(number, _) => number,
-            _ => unreachable!(),
+            Item::Symbol(..) => unreachable!(),
         })
         .sum()
 }
@@ -119,7 +119,7 @@ pub fn part2(grid: &str) -> u32 {
             iterator
                 .map(|item| match item {
                     Item::Number(number, _) => number,
-                    _ => unreachable!(),
+                    Item::Symbol(..) => unreachable!(),
                 })
                 .product::<u32>()
         })

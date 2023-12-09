@@ -46,13 +46,13 @@ impl Hand {
             count[0] += jokers;
 
             match count.as_slice() {
-                &[5] => Strength::FiveOfAKind,
-                &[4, 1] => Strength::FourOfAKind,
-                &[3, 2] => Strength::FullHouse,
-                &[3, 1, 1] => Strength::ThreeOfAKind,
-                &[2, 2, 1] => Strength::TwoPair,
-                &[2, 1, 1, 1] => Strength::Pair,
-                &[1, 1, 1, 1, 1] => Strength::HighCard,
+                [5] => Strength::FiveOfAKind,
+                [4, 1] => Strength::FourOfAKind,
+                [3, 2] => Strength::FullHouse,
+                [3, 1, 1] => Strength::ThreeOfAKind,
+                [2, 2, 1] => Strength::TwoPair,
+                [2, 1, 1, 1] => Strength::Pair,
+                [1, 1, 1, 1, 1] => Strength::HighCard,
                 _ => unreachable!(),
             }
         };
