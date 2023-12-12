@@ -24,7 +24,7 @@ pub fn input_generator(input: &str) -> (Vec<Pos>, Vec<i64>, Vec<i64>) {
     let galaxies = grid
         .into_iter()
         .enumerate()
-        .map(|(y, row)| {
+        .flat_map(|(y, row)| {
             row.into_iter()
                 .enumerate()
                 .map(|(x, c)| {
@@ -39,7 +39,6 @@ pub fn input_generator(input: &str) -> (Vec<Pos>, Vec<i64>, Vec<i64>) {
                 })
                 .collect_vec()
         })
-        .flatten()
         .flatten()
         .collect_vec();
 
