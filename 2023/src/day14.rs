@@ -188,13 +188,13 @@ pub fn part2(input: &str) -> usize {
                 map.move_east();
             }
             return map.get_score();
-            // see
         }
 
         seens.insert(map.clone(), idx);
         idx += 1;
     }
-    0
+
+    unreachable!()
 }
 
 #[cfg(test)]
