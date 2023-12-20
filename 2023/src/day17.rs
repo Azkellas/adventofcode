@@ -98,6 +98,7 @@ fn solve(map: &Map, test_direction: fn(&Direction, &Direction, i32) -> bool) -> 
             return cost;
         }
 
+        // worse solution.
         if let Some(old_cost) = seens.get(&mve) {
             if cost >= *old_cost {
                 continue;
